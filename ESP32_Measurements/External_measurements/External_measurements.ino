@@ -14,8 +14,8 @@
 #define BME_CS 5
 #define SEALEVELPRESSURE_HPA (1013.25)
 
-const char* ssid = "ssid";
-const char* password = "password";
+const char* ssid = "FunBox2-655E";
+const char* password = "Haslo1243";
 const char* serverUrl = "";
 
 Adafruit_BME280 bme(BME_CS, BME_MOSI, BME_MISO, BME_SCK);
@@ -89,7 +89,7 @@ void handleMeasure(){
   esp_wifi_set_ps(WIFI_PS_NONE);
   String jsonData = performMeasurements();
   sendDataToServer(jsonData);
-  server.send(200, "text/plain", "OK");
+  server.send(200, "text/plain", jsonData);
   esp_wifi_set_ps(WIFI_PS_MIN_MODEM);
 }
 
