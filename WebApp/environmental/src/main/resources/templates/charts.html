@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<button onclick="window.location.href='/index'">Go back</button>
+<canvas id="temperatureChart" width="600" height="300"></canvas>
+<canvas id="humidityChart" width="600" height="300"></canvas>
+<canvas id="pressureChart" width="600" height="300"></canvas>
+<canvas id="lightChart" width="600" height="300"></canvas>
+
+<script>
+    function formatTimestamp(timestamp) {
+        const date = new Date(timestamp);
+        return date.toLocaleString("pl-PL", {
+            hour: '2-digit',
+            minute: '2-digit',
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+        });
+    }
+
+    fetch("/api/chart-data")
+        .then(res => res.json())
+        .then(data => {
+            const labels = data.map(e => formatTimestamp(e.timestamp));
+            const temperature = data.map(d => d.temperature);
+            const humidity = data.map(d => d.humidity);
+            const pressure = data.map(d => d.pressure);
+            const light = data.map(d => d.light);
+
+            new Chart(document.getElementById("temperatureChart"), {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Temperature (°C)',
+                        data: temperature,
+                        borderColor: 'red',
+                        fill: false
+                    }]
+                }
+            });
+
+            new Chart(document.getElementById("humidityChart"), {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Humidity (%)',
+                        data: humidity,
+                        borderColor: 'blue',
+                        fill: false
+                    }]
+                }
+            });
+
+            new Chart(document.getElementById("pressureChart"), {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Pressure (hPa)',
+                        data: pressure,
+                        borderColor: 'green',
+                        fill: false
+                    }]
+                }
+            });
+
+            new Chart(document.getElementById("lightChart"), {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Light (lx)',
+                        data: light,
+                        borderColor: 'orange',
+                        fill: false
+                    }]
+                }
+            });
+        });
+</script>
+</body>
+</html>
